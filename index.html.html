@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartQR – Restaurant Automation</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">SQ</div>
+      <div>
+        <div class="brand-title">SmartQR – Restaurant Automation</div>
+        <div class="brand-sub">Customer • Kitchen • Owner</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-link" data-view="customer" id="nav-customer">Customer</button>
+      <button class="nav-link staff-only" data-view="kitchen" id="nav-kitchen">Kitchen</button>
+      <button class="nav-link staff-only" data-view="owner" id="nav-owner">Owner</button>
+
+      <div class="nav-right">
+        <span id="roleLabel" class="role-label">Role: Customer</span>
+        <button id="loginBtn" class="btn small">Staff Login</button>
+        <button id="logoutBtn" class="btn small ghost" style="display:none;">Logout</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- CUSTOMER VIEW -->
+    <section id="view-customer" class="view-card">
+      <h2>Customer – Scan & Order</h2>
+      <p class="muted">Scan QR to open this page. Browse the menu, add items to cart, place order and pay.</p>
+
+      <!-- Menu -->
+      <div id="menuGrid" class="menu-grid"></div>
+
+      <!-- Cart & Payment -->
+      <div class="card" style="margin-top:18px;">
+        <div class="card-header">
+          <h3>Cart</h3>
+          <span class="muted">Items you selected</span>
+          <span class="spacer"></span>
+          <span class="muted">Total: <strong id="cartTotal">₹0</strong></span>
+          <button class="btn ghost small" id="clearCartBtn">Clear</button>
+          <button class="btn small" id="placeOrderBtn">Place Order</button>
+        </div>
+
+        <div id="cartArea" class="cart-list">
+          <div class="muted">Your cart is empty</div>
+        </div>
+
+        <div id="paymentArea" class="card payment" style="display:none;">
+          <h4>Make Payment (Customer only)</h4>
+          <p class="muted text-sm">This is a demo payment – no real money is charged.</p>
+          <input id="cardName" placeholder="Name on card">
+          <input id="cardNumber" placeholder="Card number (mock)">
+          <button class="btn small" id="payBtn">Pay & Confirm</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- KITCHEN VIEW (STAFF ONLY) -->
+    <section id="view-kitchen" class="view-card" style="display:none;">
+      <h2>Kitchen – Active Orders</h2>
+      <p class="muted">Only staff can see this. Update order status: placed → preparing → ready → completed.</p>
+
+      <div id="kitchenOrders" class="orders-list"></div>
+    </section>
+
+    <!-- OWNER VIEW (STAFF ONLY) -->
+    <section id="view-owner" class="view-card" style="display:none;">
+      <h2>Owner – Orders Dashboard</h2>
+      <p class="muted">Track all orders, payment status and update order status if needed.</p>
+
+      <div class="stats-row">
+        <div class="stat">
+          <div id="statOrders" class="stat-val">0</div>
+          <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat">
+          <div id="statRevenue" class="stat-val">₹0</div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+        <div class="stat">
+          <div id="statPaid" class="stat-val">₹0</div>
+          <div class="stat-label">Paid Revenue</div>
+        </div>
+        <div class="stat">
+          <div id="statUnpaid" class="stat-val">₹0</div>
+          <div class="stat-label">Unpaid Revenue</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="controls">
+          <label class="muted">Filter:
+            <select id="ownerFilter">
+              <option value="all">All</option>
+              <option value="placed">Placed</option>
+              <option value="preparing">Preparing</option>
+              <option value="ready">Ready</option>
+              <option value="completed">Completed</option>
+            </select>
+          </label>
+          <span class="spacer"></span>
+          <span class="muted">Shown: <strong id="ownerTotalCount">0</strong></span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Time</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="ownerTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Simple Staff Login Modal -->
+  <div id="loginModal" class="modal" style="display:none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3>Staff Login</h3>
+      <p class="muted text-sm">Frontend-only demo login. Do NOT use in real production.</p>
+      <label>Role
+        <select id="loginRole">
+          <option value="kitchen">Kitchen Staff</option>
+          <option value="owner">Restaurant Owner</option>
+        </select>
+      </label>
+      <label>Password
+        <input id="loginPassword" type="password" placeholder="Enter password">
+      </label>
+      <p class="muted text-sm">Demo passwords (for testing): <br>Kitchen: <code>kitchen123</code> • Owner: <code>owner123</code></p>
+      <div class="modal-actions">
+        <button class="btn small" id="loginSubmit">Login</button>
+        <button class="btn small ghost" id="loginCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Demo prototype – data stored in browser (<code>localStorage</code> key: <b>smartqr_orders_v1</b>)
+  </footer>
+</body>
+</html>
